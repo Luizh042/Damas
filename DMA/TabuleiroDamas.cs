@@ -18,7 +18,7 @@ public class TabuleiroDamas
 
     private void InicializarTabuleiro()
     {
-        pecas = "preto";
+        pecas = "vermelho";
     }
 }
 

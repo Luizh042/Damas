@@ -12,6 +12,6 @@ public class Tests
         TabuleiroDamas tabuleiro = new TabuleiroDamas();
         string pecas = tabuleiro.GetPecas();
 
-        Assert.AreEqual("preto", pecas);
+        Assert.AreEqual("vermelho", pecas);
     }
 }
