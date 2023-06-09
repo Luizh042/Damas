@@ -136,7 +136,7 @@ public class TabuleiroDamas
             }
         }
     }
-    /*
+    
     private void InitializePieces() {
 
         // Inicializar o tabuleiro vazio
@@ -169,7 +169,7 @@ public class TabuleiroDamas
             }
         }
     }
-    */
+    
 
     public bool IsValidPosition(int x, int y)
     {
@@ -326,12 +326,41 @@ public class TabuleiroDamas
         }
     }
 
-    public bool CanPromoteToDama(int x, int y)
-    {
+    private bool IsCaptureMove(int fromX, int fromY, int toX, int toY) {
+
+        // Verificar se o movimento é uma captura válida
+        int deltaX = toX - fromX;
+        int deltaY = toY - fromY;
+
+        // Verificar se o movimento é diagonal
+        if (Math.Abs(deltaX) != 1 || Math.Abs(deltaY) != 1) {
+
+            return false;
+        }
+
+        // Verificar se a posição intermediária contém uma peça adversária
+        int intermediateX = fromX + (deltaX / 2);
+        int intermediateY = fromY + (deltaY / 2);
+
+        if (!IsPositionValid(intermediateX, intermediateY) || IsPositionEmpty(intermediateX, intermediateY)) {
+
+            return false;
+        }
+
+        PieceColor opponentColor = (currentPlayer.Color == PieceColor.White) ? PieceColor.Black : PieceColor.White;
+        if (!IsPieceValid(intermediateX, intermediateY, opponentColor)) {
+            
+            return false;
+        }
+
+        // O movimento é uma captura válida
+        return true;
+    }
+
+    public bool CanPromoteToDama(int x, int y) {
 
         // Verifique se a posição contém uma peça válida
-        if (!IsValidPosition(x, y) || !HasPiece(x, y))
-        {
+        if (!IsValidPosition(x, y) || !HasPiece(x, y)) {
 
             return false;
         }
@@ -341,38 +370,46 @@ public class TabuleiroDamas
 
         return true; // Se todas as condições forem atendidas, a promoção é possível
     }
-
-    public void PromoteToDama(int x, int y)
-    {
+    
+    public void PromoteToDama(int x, int y) {
 
         // Verifique se a promoção é possível
-        if (CanPromoteToDama(x, y))
-        {
+        if (CanPromoteToDama(x, y)) {
 
             // Realize a promoção da peça para dama
             Piece piece = pieces[x, y];
             piece.IsDama = true;
         }
-        else
-        {
+        else {
 
             Console.WriteLine("Promoção inválida!");
         }
     }
+    private bool ShouldPromoteToDama(int destinationX, int destinationY, PieceColor pieceColor) {
 
-    public bool CanJump(int startX, int startY, int targetX, int targetY)
-    {
+        // Verificar se a peça normal deve ser promovida a uma Dama
+        if (pieceColor == PieceColor.White && destinationX == BoardSize - 1) {
+
+            return true;
+        }
+        else if (pieceColor == PieceColor.Black && destinationX == 0) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CanJump(int startX, int startY, int targetX, int targetY) {
 
         // Verifique se a posição de origem contém uma peça válida
-        if (!IsValidPosition(startX, startY) || !HasPiece(startX, startY))
-        {
+        if (!IsValidPosition(startX, startY) || !HasPiece(startX, startY)) {
 
             return false;
         }
 
         // Verifique se a posição de destino está vazia
-        if (HasPiece(targetX, targetY))
-        {
+        if (HasPiece(targetX, targetY)) {
 
             return false;
         }
@@ -382,8 +419,7 @@ public class TabuleiroDamas
         int capturedX = (startX + targetX) / 2; // Calcula a posição x da peça a ser capturada
         int capturedY = (startY + targetY) / 2; // Calcula a posição y da peça a ser capturada
 
-        if (HasPiece(capturedX, capturedY) && IsEnemyPiece(capturedX, capturedY))
-        {
+        if (HasPiece(capturedX, capturedY) && IsEnemyPiece(capturedX, capturedY)) {
 
             return true; // Se todas as condições forem atendidas, o salto é possível
         }
@@ -391,12 +427,10 @@ public class TabuleiroDamas
         return false;
     }
 
-    public void Jump(int startX, int startY, int targetX, int targetY)
-    {
+    public void Jump(int startX, int startY, int targetX, int targetY) {
 
         // Verifique se o salto é possível
-        if (CanJump(startX, startY, targetX, targetY))
-        {
+        if (CanJump(startX, startY, targetX, targetY)) {
 
             // Realize o salto, capturando a peça inimiga
             int capturedX = (startX + targetX) / 2; // Calcula a posição x da peça a ser capturada
@@ -410,33 +444,28 @@ public class TabuleiroDamas
 
             Console.WriteLine("Salto realizado com sucesso!");
         }
-        else
-        {
+        else {
 
             Console.WriteLine("Salto inválido!");
         }
     }
 
-    public bool CanMoveDama(int startX, int startY, int targetX, int targetY)
-    {
+    public bool CanMoveDama(int startX, int startY, int targetX, int targetY) {
 
         // Verifique se a posição inicial contém uma Dama válida
-        if (!IsValidPosition(startX, startY) || !HasPiece(startX, startY) || !IsDama(startX, startY))
-        {
+        if (!IsValidPosition(startX, startY) || !HasPiece(startX, startY) || !IsDama(startX, startY)) {
 
             return false;
         }
 
         // Verifique se a posição alvo é válida
-        if (!IsValidPosition(targetX, targetY))
-        {
+        if (!IsValidPosition(targetX, targetY)) {
 
             return false;
         }
 
         // Verifique se a posição alvo está vazia
-        if (HasPiece(targetX, targetY))
-        {
+        if (HasPiece(targetX, targetY)) {
 
             return false;
         }
@@ -446,8 +475,7 @@ public class TabuleiroDamas
         int deltaY = targetY - startY;
 
         // Verifique se o movimento é diagonal (mesma distância em X e Y)
-        if (Math.Abs(deltaX) != Math.Abs(deltaY))
-        {
+        if (Math.Abs(deltaX) != Math.Abs(deltaY)) {
 
             return false;
         }
@@ -459,12 +487,10 @@ public class TabuleiroDamas
         int currentX = startX + stepX;
         int currentY = startY + stepY;
 
-        while (currentX != targetX && currentY != targetY)
-        {
+        while (currentX != targetX && currentY != targetY) {
 
             // Verifique se há uma peça no caminho
-            if (HasPiece(currentX, currentY))
-            {
+            if (HasPiece(currentX, currentY)) {
 
                 return false;
             }
@@ -476,41 +502,35 @@ public class TabuleiroDamas
         return true; // Se todas as condições forem atendidas, o movimento da Dama é válido
     }
 
-    public void MoveDama(int startX, int startY, int targetX, int targetY)
-    {
+    public void MoveDama(int startX, int startY, int targetX, int targetY) {
 
         // Verifique se o movimento da Dama é válido
-        if (CanMoveDama(startX, startY, targetX, targetY))
-        {
+        if (CanMoveDama(startX, startY, targetX, targetY)) {
 
             // Realize o movimento da Dama
             Piece piece = pieces[startX, startY];
             pieces[startX, startY] = null;
             pieces[targetX, targetY] = piece;
         }
-        else
-        {
+        else {
 
             Console.WriteLine("Movimento inválido da Dama!");
         }
     }
 
-    private void InitializeBoard()
-    {
+    private void InitializeBoard() {
 
         // Inicializar o array de peças com posições vazias
         pieces = new Piece[8, 8];
 
         // Preencher as posições iniciais das peças brancas
-        for (int row = 0; row < 3; row++)
-        {
+        for (int row = 0; row < 3; row++) {
 
             for (int col = 0; col < 8; col++)
             {
 
                 // Verificar se a posição deve conter uma peça
-                if ((row + col) % 2 == 0)
-                {
+                if ((row + col) % 2 == 0) {
 
                     pieces[row, col] = new Piece(PieceType.Normal, PieceColor.White);
                 }
@@ -518,15 +538,12 @@ public class TabuleiroDamas
         }
 
         // Preencher as posições iniciais das peças pretas
-        for (int row = 5; row < 8; row++)
-        {
+        for (int row = 5; row < 8; row++) {
 
-            for (int col = 0; col < 8; col++)
-            {
+            for (int col = 0; col < 8; col++) {
 
                 // Verificar se a posição deve conter uma peça
-                if ((row + col) % 2 == 0)
-                {
+                if ((row + col) % 2 == 0) {
 
                     pieces[row, col] = new Piece(PieceType.Normal, PieceColor.Black);
                 }
@@ -534,6 +551,38 @@ public class TabuleiroDamas
         }
     }
 
+    private void ExecuteMove(Move move) {
+
+        // Obtenha as coordenadas de origem e destino da jogada
+        int sourceX = move.SourceX;
+        int sourceY = move.SourceY;
+        int destinationX = move.DestinationX;
+        int destinationY = move.DestinationY;
+
+        // Obtenha a peça a ser movida
+        Piece piece = move.Piece;
+
+        // Mova a peça para a posição de destino
+        pieces[sourceX, sourceY] = null; // Remove a peça da posição de origem
+        pieces[destinationX, destinationY] = piece; // Coloca a peça na posição de destino
+
+        // Verifique se a jogada resultou em uma captura de peça
+        int capturedX = (sourceX + destinationX) / 2; // Coordenada X da peça capturada
+        int capturedY = (sourceY + destinationY) / 2; // Coordenada Y da peça capturada
+
+        if (IsCaptureMove(sourceX, sourceY, destinationX, destinationY)) {
+
+            // Remove a peça capturada do tabuleiro
+            pieces[capturedX, capturedY] = null;
+        }
+
+        // Verifique se a peça alcançou a última linha para se tornar uma Dama
+        if (ShouldPromoteToDama(destinationX, destinationY, piece.Color)) {
+
+            // Promova a peça para uma Dama
+            piece.IsDama = true;
+        }
+    }
 
     private void SetInitialPlayers()
     {
@@ -678,7 +727,7 @@ public class TabuleiroDamas
                 {
 
                     // Alternar para o próximo jogador
-                    switchPlayer();
+                    ChangeTurn();
                 }
             }
             else
@@ -687,35 +736,112 @@ public class TabuleiroDamas
                 // A jogada é inválida, exibir mensagem de erro e pedir outra jogada
                 Console.WriteLine("Jogada inválida! Tente novamente");
             }
+        }
+    }
+    public void ClearBoard() {
 
 
-            void ClearBoard()
-            {
+        for (int i = 0; i < BoardSize; i++) {
 
-                for (int i = 0; i < boardSize; i++)
-                {
+            for (int j = 0; j < BoardSize; j++) {
 
-                    for (int j = 0; j < boardSize; j++)
-                    {
+                pieces[i, j] = null;
+            }
+        }
+    }
+    public void Start() {
 
-                        board[i, j] = null;
+        //inicia o tabuleiro
+        InitializePieces();
+
+        //define as peças e jogadores iniciais
+        SetInicialPieces();
+        SetInicialPlayers();
+
+        //Inicia o jogo
+        PlayGame();
+    }
+    private bool IsGameOver() {
+
+        // Verifique se algum jogador não tem mais peças ou não pode fazer mais movimentos válidos
+
+        // Verificar se o jogador branco não tem mais peças ou não pode fazer mais movimentos válidos
+        bool whitePlayerLost = true;
+
+        for (int row = 0; row < BoardSize; row++) {
+
+            for (int col = 0; col < BoardSize; col++) {
+
+                Piece piece = pieces[row, col];
+                if (piece != null && piece.Color == PieceColor.White) {
+                    
+                    if (HasValidMove(row, col)) {
+
+                        whitePlayerLost = false;
+                        break;
                     }
                 }
             }
+            if (!whitePlayerLost) {
 
-            void Start()
-            {
-
-                //inicia o tabuleiro
-                initializePieces();
-
-                //define as peças e jogadores iniciais
-                SetInicialPieces();
-                SetInicialPlayers();
-
-                //Inicia o jogo
-                PlayGame();
+                break;
             }
+        }
+
+        if (whitePlayerLost) {
+
+            return true;
+        }
+
+        // Verificar se o jogador preto não tem mais peças ou não pode fazer mais movimentos válidos
+        bool blackPlayerLost = true;
+
+        for (int row = 0; row < BoardSize; row++) {
+
+            for (int col = 0; col < BoardSize; col++) {
+
+                Piece piece = pieces[row, col];
+                if (piece != null && piece.Color == PieceColor.Black) {
+
+                    if (HasValidMove(row, col)) {
+                        
+                        blackPlayerLost = false;
+                        break;
+                    }
+                }
+            }
+            if (!blackPlayerLost) {
+
+                break;
+            }
+        }
+
+        if (blackPlayerLost) {
+
+            return true;
+        }
+
+        return false;
+    }
+    private void DisplayGameResult() {
+        // Verifique o resultado do jogo e exiba a mensagem correspondente
+
+        if (IsGameOver()) {
+
+            Console.WriteLine("Jogo encerrado.");
+
+            if (currentPlayer.Color == PieceColor.White) {
+
+                Console.WriteLine("Vitória do jogador preto!");
+            }
+            else {
+
+                Console.WriteLine("Vitória do jogador branco!");
+            }
+        }
+        else {
+
+            Console.WriteLine("Jogo em andamento.");
         }
     }
 }
