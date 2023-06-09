@@ -14,6 +14,8 @@ namespace Damas
             Color = color;
             IsDama = false;
         }
+
+        
     }
 }
 
