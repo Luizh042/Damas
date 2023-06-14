@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Damas;
 
 namespace Damas;
@@ -35,7 +36,7 @@ public class TabuleiroDamas
         }
     }
 
-    public TabuleiroDamas()
+    public void Board()
     {
 
         pieces = new Piece[BoardSize, BoardSize];
@@ -136,6 +137,51 @@ public class TabuleiroDamas
             }
         }
     }
+
+    public List<Piece> GetPieces() {
+
+        List<Piece> allPieces = new List<Piece>();
+
+        for (int row = 0; row < BoardSize; row++) {
+
+            for (int col = 0; col < BoardSize; col++) {
+
+                Piece piece = pieces[row, col];
+                if (piece != null) {
+
+                    allPieces.Add(piece);
+                }
+            }
+        }
+
+        return allPieces;
+    }
+
+    public string GetPiecesAsString() {
+
+        List<Piece> allPieces = GetPieces();
+
+        List<string> pieceStrings = new List<string>();
+        foreach (Piece piece in allPieces) {
+
+            pieceStrings.Add(piece.ToString());
+        }
+
+        string piecesString = string.Join(", ", pieceStrings);
+
+        return piecesString;
+    }
+
+    public void SetInicialPlayers() {
+        
+        //criar jogadores
+
+
+        //Definir as cores de cada jogador
+
+    }
+
+
     
     private void InitializePieces() {
 
@@ -169,7 +215,6 @@ public class TabuleiroDamas
             }
         }
     }
-    
 
     public bool IsValidPosition(int x, int y)
     {
@@ -749,13 +794,71 @@ public class TabuleiroDamas
             }
         }
     }
+
+    private bool HasValidMove() {
+
+        // Percorra todas as peças do jogador atual
+        foreach (Piece piece in currentPlayer.Pieces) {
+
+            // Verifique se a peça possui algum movimento válido
+            if (HasValidMoveForPiece(piece)) {
+
+                return true;
+            }
+        }
+
+        // Nenhum movimento válido encontrado
+        return false;
+    }
+
+    private bool HasValidMoveForPiece(Piece piece) {
+
+        int x = piece.PositionX;
+        int y = piece.PositionY;
+
+        // Verificar se há algum movimento de captura válido
+        if (IsValidCaptureMove(x, y, x + 1, y + 1) || IsValidCaptureMove(x, y, x + 1, y - 1)
+            || IsValidCaptureMove(x, y, x - 1, y + 1) || IsValidCaptureMove(x, y, x - 1, y - 1)) {
+
+            return true;
+        }
+
+        // Verificar se há algum movimento de movimentação simples válido
+        if (IsValidSimpleMove(x, y, x + 1, y + 1) || IsValidSimpleMove(x, y, x + 1, y - 1)
+            || IsValidSimpleMove(x, y, x - 1, y + 1) || IsValidSimpleMove(x, y, x - 1, y - 1)) {
+
+            return true;
+        }
+
+        // Nenhum movimento válido encontrado
+        return false;
+    }
+
+    private bool IsValidCaptureMove(int sourceX, int sourceY, int destinationX, int destinationY) {
+
+        // Implementar a lógica para verificar se o movimento é uma captura válida
+        // Verificar se a posição de destino está vazia e se há uma peça oponente entre as posições de origem e destino
+        // Retornar true se for uma captura válida, caso contrário, retornar false
+        // Lembre-se de considerar as regras de movimento de captura do jogo de damas
+        // Por exemplo, verificar se a distância entre as posições de origem e destino é de duas casas
+        return false;
+    }
+
+    private bool IsValidSimpleMove(int sourceX, int sourceY, int destinationX, int destinationY) {
+
+        // Implementar a lógica para verificar se o movimento é uma movimentação simples válida
+        // Verificar se a posição de destino está vazia e se a distância entre as posições de origem e destino é de uma casa
+        // Retornar true se for uma movimentação simples válida, caso contrário, retornar false
+        // Lembre-se de considerar as regras de movimento simples do jogo de damas
+        return false;
+    }
+
     public void Start() {
 
         //inicia o tabuleiro
         InitializePieces();
 
         //define as peças e jogadores iniciais
-        SetInicialPieces();
         SetInicialPlayers();
 
         //Inicia o jogo
@@ -775,7 +878,7 @@ public class TabuleiroDamas
                 Piece piece = pieces[row, col];
                 if (piece != null && piece.Color == PieceColor.White) {
                     
-                    if (HasValidMove(row, col)) {
+                    if (HasValidMove()) {
 
                         whitePlayerLost = false;
                         break;
@@ -803,7 +906,7 @@ public class TabuleiroDamas
                 Piece piece = pieces[row, col];
                 if (piece != null && piece.Color == PieceColor.Black) {
 
-                    if (HasValidMove(row, col)) {
+                    if (HasValidMove()) {
                         
                         blackPlayerLost = false;
                         break;

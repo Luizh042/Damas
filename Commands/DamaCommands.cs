@@ -1,93 +1,96 @@
-namespace Damas;
+using Damas;
 
-public class CapturePieceCommand : ICommand {
+namespace Damas { 
 
-    private Receiver receiver;
-    private int x;
-    private int y;
+    public class CapturePieceCommand : ICommand {
 
-    public CapturePieceCommand(Receiver receiver, int x, int y) {
+        private Receiver receiver;
+        private int x;
+        private int y;
 
-        this.receiver = receiver;
-        this.x = x;
-        this.y = y;
-    }
+        public CapturePieceCommand(Receiver receiver, int x, int y) {
 
-    public void Execute() {
+            this.receiver = receiver;
+            this.x = x;
+            this.y = y;
+        }
 
-        receiver.CapturePiece(x, y);
-    }
-}
+        public void Execute() {
 
-public class MovePieceCommand : ICommand {
-
-    private Receiver receiver;
-    private int x;
-    private int y;
-
-    public MovePieceCommand(Receiver receiver, int x, int y) {
-
-        this.receiver = receiver;
-        this.x = x;
-        this.y = y;
-    }
-
-    public void Execute() {
-
-        receiver.MovePiece(x, y);
-    }
-}
-
-public class JumpCommand : ICommand {
-
-    private Receiver receiver;
-    private List<Position> jumpPositions;
-
-    public JumpCommand(Receiver receiver, List<Position> jumpPositions) {
-
-        this.receiver = receiver;
-        this.jumpPositions = jumpPositions;
-    }
-
-    public void Execute() {
-
-        foreach (Position jumpPosition in jumpPositions) {
-
-            receiver.Jump(jumpPosition.x, jumpPosition.y);
+            receiver.CapturePiece(x, y);
         }
     }
-}
 
-public class PromoteToDamaCommand : ICommand {
+    public class MovePieceCommand : ICommand {
 
-    private Receiver receiver;
+        private Receiver receiver;
+        private int x;
+        private int y;
 
-    public PromoteToDamaCommand(Receiver receiver) {
+        public MovePieceCommand(Receiver receiver, int x, int y) {
 
-        this.receiver = receiver;
+            this.receiver = receiver;
+            this.x = x;
+            this.y = y;
+        }
+
+        public void Execute() {
+
+            receiver.MovePiece(x, y);
+        }
     }
 
-    public void Execute() {
+    public class JumpCommand : ICommand {
 
-        receiver.PromoteToDama();
+        private Receiver receiver;
+        private List<Position> jumpPositions;
+
+        public JumpCommand(Receiver receiver, List<Position> jumpPositions) {
+
+            this.receiver = receiver;
+            this.jumpPositions = jumpPositions;
+        }
+
+        public void Execute() {
+
+            foreach (Position jumpPosition in jumpPositions) {
+
+                receiver.Jump(jumpPosition.x, jumpPosition.y);
+            }
+        }
     }
-}
 
-public class MoveDamaCommand : ICommand {
+    public class PromoteToDamaCommand : ICommand {
 
-    private Receiver receiver;
-    private int x;
-    private int y;
+        private Receiver receiver;
 
-    public MoveDamaCommand(Receiver receiver, int x, int y) {
+        public PromoteToDamaCommand(Receiver receiver) {
 
-        this.receiver = receiver;
-        this.x = x;
-        this.y = y;
+            this.receiver = receiver;
+        }
+
+        public void Execute() {
+
+            receiver.PromoteToDama();
+        }
     }
 
-    public void Execute() {
+    public class MoveDamaCommand : ICommand {
 
-        receiver.MoveDama(x, y);
+        private Receiver receiver;
+        private int x;
+        private int y;
+
+        public MoveDamaCommand(Receiver receiver, int x, int y) {
+
+            this.receiver = receiver;
+            this.x = x;
+            this.y = y;
+        }
+
+        public void Execute() {
+
+            receiver.MoveDama(x, y);
+        }
     }
 }

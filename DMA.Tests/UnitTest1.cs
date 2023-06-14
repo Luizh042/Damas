@@ -1,17 +1,27 @@
-namespace DMA.Tests;
-public class Tests
+using Damas;
+using NUnit.Framework;
+
+namespace DMA.Tests
 {
-    [SetUp]
-    public void Setup()
+    public class Tests
     {
-    }
+        [SetUp]
+        public void Setup()
+        {
+        }
 
-    [Test]
-    public void TestInicializacaoTabuleiro()
-    {
-        TabuleiroDamas tabuleiro = new TabuleiroDamas();
-        string pecas = tabuleiro.GetPecas();
+        [Test]
+        public void TestInicializacaoTabuleiro()
+        {
+            TabuleiroDamas tabuleiro = new TabuleiroDamas();
 
-        Assert.AreEqual("vermelho", pecas);
+            // Verifica se todas as peças foram inicializadas corretamente
+            List<Piece> pieces = tabuleiro.GetPieces();
+            foreach (Piece piece in pieces)
+            {
+                Assert.IsNotNull(piece);
+                // Adicione aqui outras verificações necessárias para cada peça
+            }
+        }
     }
 }

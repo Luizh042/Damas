@@ -8,6 +8,10 @@ namespace Damas
         public PieceColor Color { get; set; }
         public bool IsDama { get; set; }
 
+        public int PositionX { get; set; }
+        public int PositionY { get; set; }
+
+
         public Piece(PieceType type, PieceColor color)
         {
             Type = type;

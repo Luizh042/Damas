@@ -6,12 +6,14 @@ public class Player
 
     public string Name { get; set; }
     public PieceColor Color { get; set; }
-
-    public Player(string name, PieceColor color) {
-
-        Name = name;
+    public List<Piece> Pieces { get; set; }
+    
+    public Player(string playerName, PieceColor color) { 
+        Name = playerName;
         Color = color;
+        Pieces = new List<Piece>();
     }
+
 
     public Move GetMove() {
 
