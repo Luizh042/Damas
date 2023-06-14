@@ -32,7 +32,7 @@ public class JumpCommand : ICommand {
         }
     }
 
-    //método
+    //método que desfaz o comando
     public void Undo() {
 
         //desfaz o movimento, retornando o jumper para a posição inicial

@@ -1,43 +1,43 @@
-using Damas;
+namespace Damas
+{
 
-namespace Damas {
-
-    public class Board {
+    /*
+        Tabuleiro do jogo de damas.
+    */
+    public class Board
+    {
 
         private Piece[,] pieces;
-        private int size;
+        private int sizeSide;
 
-        public Board(int size) {
+        public Board(int sizeSide)
+        {
 
-            this.size = size;
-            pieces = new Piece[size, size];
+            this.sizeSide = sizeSide;
+            pieces = new Piece[sizeSide, sizeSide];
         }
 
-        public int Size => size;
-
-        public Piece GetPiece(int x, int y) {
-
-            if (IsValidPosition(x, y))
-                return pieces[x, y];
-            else
-                return null;
+        public int SizeSide
+        {
+            get
+            {
+                return sizeSide;
+            }
         }
 
-        public void SetPiece(int x, int y, Piece piece) {
-
-            if (IsValidPosition(x, y))
-                pieces[x, y] = piece;
+        public Piece GetPiece(int x, int y)
+        {
+            return pieces[x, y];
         }
 
-        public void RemovePiece(int x, int y) {
-
-            if (IsValidPosition(x, y))
-                pieces[x, y] = null;
+        public void SetPiece(int x, int y, Piece piece)
+        {
+            pieces[x, y] = piece;
         }
 
-        public bool IsValidPosition(int x, int y) {
-
-            return x >= 0 && x < size && y >= 0 && y < size;
+        public void RemovePiece(int x, int y)
+        {
+            pieces[x, y] = null;
         }
     }
 }
